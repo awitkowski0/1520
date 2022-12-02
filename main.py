@@ -2,8 +2,8 @@ from email.utils import parseaddr
 
 import flask
 import hashlib
-import lmsobjects
-import lmsdatastore
+import objects
+import datastore
 import logging
 
 app = flask.Flask(__name__)
@@ -19,27 +19,27 @@ def root():
 
 @app.route('/courses')
 def courses_page():
-    course_list = lmsdatastore.load_courses()
+    course_list = datastore.load_courses()
     return show_page('courses.html', 'Course List', courses=course_list)
 
 
 @app.route('/course/<coursecode>')
 def course_page(coursecode):
-    course_object = lmsdatastore.load_course(coursecode)
+    course_object = datastore.load_course(coursecode)
     return show_page('course.html', course_object.name, course=course_object)
 
 
 @app.route('/lesson/<coursecode>/<lessonid>')
 def lesson_page(coursecode, lessonid):
-    course_object = lmsdatastore.load_course(coursecode)
-    lesson_object = lmsdatastore.load_lesson(coursecode, int(lessonid))
+    course_object = datastore.load_course(coursecode)
+    lesson_object = datastore.load_lesson(coursecode, int(lessonid))
     title = course_object.name + ' / ' + lesson_object.title
     user = get_user()
     show_completion_link = True
     if user:
         # We use the code below to identify if the user has already marked this
         # lesson as completed.
-        completions = lmsdatastore.load_completions(user)
+        completions = datastore.load_completions(user)
         if course_object.code in completions:
             if lesson_object.id in completions[course_object.code]:
                 show_completion_link = False
@@ -60,10 +60,10 @@ def signin():
 
 @app.route('/dosignin', methods=['POST'])
 def dosignin():
-    username = flask.request.form.get('username')
+    email = flask.request.form.get('email')
     password = flask.request.form.get('password')
     passwordhash = get_password_hash(password)
-    user = lmsdatastore.load_user(username, passwordhash)
+    user = datastore.load_user(email, passwordhash)
     if user:
         flask.session['user'] = user.username
         return flask.redirect('/')
@@ -79,23 +79,43 @@ def signout():
 
 @app.route('/register', methods=['POST'])
 def register_user():
-    username = flask.request.form.get('username')
+    email = flask.request.form.get('email')
     password1 = flask.request.form.get('password1')
     password2 = flask.request.form.get('password2')
-    email = flask.request.form.get('email')
+    first_name = flask.request.form.get('first_name')
+    last_name = flask.request.form.get('last_name')
+    grad_year = flask.request.form.get('grad_year')
+    school = flask.request.form.get('school')
+    photo_url = flask.request.form.get('photo_url')
+    bio = flask.request.form.get('bio')
+
     errors = []
     if password1 != password2:
         errors.append('Passwords do not match.')
     email_parts = parseaddr(email)
     if len(email_parts) != 2 or not email_parts[1]:
         errors.append('Invalid email address: ' + str(email))
+    emails = email.split('@')
 
-    user = lmsobjects.User(username, email)
+    if emails[1] != 'pitt.edu'.lower():
+        errors.append('Please use a pitt.edu email address: ' + str(email))
+    username = emails[0]
+
+    user = objects.User(
+        username,
+        email,
+        first_name, 
+        last_name, 
+        grad_year, 
+        school, 
+        photo_url, 
+        bio
+    )
     if errors:
         return show_page('/signup.html', 'Sign Up', errors=errors)
     else:
         passwordhash = get_password_hash(password1)
-        lmsdatastore.save_user(user, passwordhash)
+        datastore.save_user(user, passwordhash)
         flask.session['user'] = user.username
         return flask.redirect('/courses')
 
@@ -104,8 +124,8 @@ def register_user():
 def about():
     user = get_user()
     if user:
-        about = lmsdatastore.load_about_user(user)
-        return show_page('about.html', 'Edit Info for ' + user, text=about)
+        about = datastore.load_about_user(user)
+        return show_page('edit_profile.html', 'Edit Info for ' + user, text=about)
     return show_login_page()
 
 
@@ -113,8 +133,21 @@ def about():
 def saveabout():
     user = get_user()
     if user:
-        about = flask.request.form.get('about')
-        lmsdatastore.save_about_user(user, about)
+        first_name = flask.request.form.get('first_name')
+        last_name = flask.request.form.get('last_name')
+        grad_year = flask.request.form.get('grad_year')
+        school = flask.request.form.get('school')
+        photo_url = flask.request.form.get('photo_url')
+        bio = flask.request.form.get('bio')
+        datastore.save_about_user(
+            user,
+            first_name, 
+            last_name, 
+            grad_year, 
+            school, 
+            photo_url, 
+            bio
+        )
         return flask.redirect('/user/' + user)
     return show_login_page()
 
@@ -123,16 +156,16 @@ def saveabout():
 def complete(coursecode, lessonid):
     user = get_user()
     if user:
-        lmsdatastore.save_completion(user, coursecode, int(lessonid))
+        datastore.save_completion(user, coursecode, int(lessonid))
         return flask.redirect('/lesson/' + coursecode + '/' + lessonid)
     return show_login_page()
 
 
 @app.route('/user/<username>')
 def user_page(username):
-    about = lmsdatastore.load_about_user(username)
+    about = datastore.load_about_user(username)
     about_lines = about.splitlines()
-    completions = lmsdatastore.load_completions(username)
+    completions = datastore.load_completions(username)
 
     # We use the following loop to sort the lessons in lexical order.
     for course in completions:
@@ -149,7 +182,7 @@ def user_page(username):
 # We should only use this to populate our data for the first time.
 @app.route('/createdata')
 def createdata():
-    lmsdatastore.create_data()
+    datastore.create_data()
     return 'OK'
 
 

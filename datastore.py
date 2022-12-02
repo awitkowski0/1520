@@ -1,6 +1,6 @@
 from google.cloud import datastore
 
-import lmsobjects
+import objects
 import logging
 
 
@@ -9,7 +9,7 @@ import logging
 # entities.
 
 
-_USER_ENTITY = 'LmsUser'
+_USER_ENTITY = 'User'
 _COURSE_ENTITY = 'LmsCourse'
 _LESSON_ENTITY = 'LmsLesson'
 
@@ -49,7 +49,7 @@ def _course_from_entity(course_entity):
     code = course_entity.key.name
     name = course_entity['name']
     desc = course_entity['description']
-    course = lmsobjects.Course(code, name, desc, [])
+    course = objects.Course(code, name, desc, [])
     logging.info('built object from course entity: %s' % (code))
     return course
 
@@ -62,7 +62,7 @@ def _lesson_from_entity(lesson_entity, include_content=True):
     content = ''
     if include_content:
         content = lesson_entity['content']
-    lesson = lmsobjects.Lesson(lesson_id, title, content)
+    lesson = objects.Lesson(lesson_id, title, content)
     logging.info('built object from lesson entity: %s' % (title))
     return lesson
 
@@ -105,16 +105,24 @@ def load_lesson(course_code, lesson_id):
     return _lesson_from_entity(lesson_entity)
 
 
-def load_user(username, passwordhash):
+def load_user(email, passwordhash):
     """Load a user based on the passwordhash; if the passwordhash doesn't match
     the username, then this should return None."""
 
     client = _get_client()
     q = client.query(kind=_USER_ENTITY)
-    q.add_filter('username', '=', username)
+    q.add_filter('email', '=', email)
     q.add_filter('passwordhash', '=', passwordhash)
     for user in q.fetch():
-        return lmsobjects.User(user['username'], user['email'], user['about'])
+        return objects.User(
+            user['username'],
+            user['email'],
+            user['first_name'],
+            user['last_name'], 
+            user['grad_year'], 
+            user['school'], 
+            user['photo_url'], 
+            user['bio'])
     return None
 
 
@@ -124,7 +132,7 @@ def load_about_user(username):
 
     user = _load_entity(_get_client(), _USER_ENTITY, username)
     if user:
-        return user['about']
+        return user['bio']
     else:
         return ''
 
@@ -154,17 +162,26 @@ def save_user(user, passwordhash):
     entity['username'] = user.username
     entity['email'] = user.email
     entity['passwordhash'] = passwordhash
-    entity['about'] = ''
-    entity['completions'] = []
+    entity['first_name'] = user.first_name
+    entity['last_name'] = user.last_name
+    entity['grad_year'] = user.grad_year
+    entity['school'] = user.school
+    entity['photo_url'] = user.photo_url
+    entity['bio'] = ''
     client.put(entity)
 
 
-def save_about_user(username, about):
-    """Save the user's about info to the datastore."""
+def save_about_user(user, first_name, last_name, grad_year, school, photo_url, bio):
+    """Save the user's bio info to the datastore."""
 
     client = _get_client()
-    user = _load_entity(client, _USER_ENTITY, username)
-    user['about'] = about
+    user = _load_entity(client, _USER_ENTITY, user)
+    user['first_name'] = first_name
+    user['last_name'] = last_name
+    user['grad_year'] = grad_year
+    user['school'] = school
+    user['photo_url'] = photo_url
+    user['bio'] = bio
     client.put(user)
 
 
@@ -195,8 +212,7 @@ def create_data():
         'username': 'testuser',
         'passwordhash': '',
         'email': '',
-        'about': '',
-        'completions': [],
+        'bio': ''
     })
     client.put(entity)
 
