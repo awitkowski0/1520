@@ -70,10 +70,10 @@ class User(object):
 
 # Comment obj
 class Comment(object):
-    def __init__(self, comment_id, post_id, user, description, date):
+    def __init__(self, comment_id, post_id, username, description, date):
         self.comment_id = comment_id
         self.post_id = post_id
-        self.user = user
+        self.username = username
         self.description = description
 
         if date:
@@ -92,11 +92,13 @@ class Comment(object):
 
 # Post obj
 class Post(object):
-    def __init__(self, post_id, user: User, title, description, image, comments: list, date):
+    def __init__(self, post_id, username, title, description, price, condition, image, comments: list, date):
         self.post_id = post_id
-        self.user = user
+        self.username = username
         self.title = title
         self.description = description
+        self.price = price
+        self.condition = condition
         self.image = image
         self.comments = comments
 
@@ -114,6 +116,8 @@ class Post(object):
             'username': self.username,
             'title': self.title,
             'description': self.description,
+            'price': self.price,
+            'condition': self.condition,
             'image': self.image,
             'comments': [],
             'date': self.date

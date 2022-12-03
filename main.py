@@ -14,38 +14,8 @@ app.secret_key = b'oaijrwoizsdfmnvoiajw34foinmzsdv98j234'
 @app.route('/index.htm')
 @app.route('/index.html')
 def root():
-    return show_page('index.html', 'Main Page')
-
-
-@app.route('/courses')
-def courses_page():
-    course_list = datastore.load_courses()
-    return show_page('courses.html', 'Course List', courses=course_list)
-
-
-@app.route('/course/<coursecode>')
-def course_page(coursecode):
-    course_object = datastore.load_course(coursecode)
-    return show_page('course.html', course_object.name, course=course_object)
-
-
-@app.route('/lesson/<coursecode>/<lessonid>')
-def lesson_page(coursecode, lessonid):
-    course_object = datastore.load_course(coursecode)
-    lesson_object = datastore.load_lesson(coursecode, int(lessonid))
-    title = course_object.name + ' / ' + lesson_object.title
-    user = get_user()
-    show_completion_link = True
-    if user:
-        # We use the code below to identify if the user has already marked this
-        # lesson as completed.
-        completions = datastore.load_completions(user)
-        if course_object.code in completions:
-            if lesson_object.id in completions[course_object.code]:
-                show_completion_link = False
-
-    return show_page('lesson.html', title, course=course_object,
-                     lesson=lesson_object, show=show_completion_link)
+    post_list = datastore.load_courses()
+    return show_page('index.html', 'Home Page', posts=post_list)
 
 
 @app.route('/signup')
@@ -120,8 +90,8 @@ def register_user():
         return flask.redirect('/courses')
 
 
-@app.route('/about')
-def about():
+@app.route('/editprofile')
+def editprofile():
     user = get_user()
     if user:
         about = datastore.load_about_user(user)
@@ -129,8 +99,8 @@ def about():
     return show_login_page()
 
 
-@app.route('/saveabout', methods=['POST'])
-def saveabout():
+@app.route('/saveprofile', methods=['POST'])
+def saveprofile():
     user = get_user()
     if user:
         first_name = flask.request.form.get('first_name')
@@ -149,15 +119,6 @@ def saveabout():
             bio
         )
         return flask.redirect('/user/' + user)
-    return show_login_page()
-
-
-@app.route('/complete/<coursecode>/<lessonid>')
-def complete(coursecode, lessonid):
-    user = get_user()
-    if user:
-        datastore.save_completion(user, coursecode, int(lessonid))
-        return flask.redirect('/lesson/' + coursecode + '/' + lessonid)
     return show_login_page()
 
 
@@ -207,14 +168,14 @@ def show_login_page():
     return show_page('/signin.html', 'Sign In', errors)
 
 
-def show_page(page, title, courses=None, course=None, lesson=None,
+def show_page(page, title, posts=None, post=None, comment=None,
               completions=None, show=True, text=None, lines=None, errors=None):
     return flask.render_template(page,
                                  page_title=title,
                                  user=get_user(),
-                                 courses=courses,
-                                 course=course,
-                                 lesson=lesson,
+                                 posts=posts,
+                                 post=post,
+                                 comment=comment,
                                  show=show,
                                  completions=completions,
                                  text=text,

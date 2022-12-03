@@ -10,8 +10,8 @@ import logging
 
 
 _USER_ENTITY = 'User'
-_COURSE_ENTITY = 'LmsCourse'
-_LESSON_ENTITY = 'LmsLesson'
+_POST_ENTITY = 'Post'
+_COMMENT_ENTITY = 'Comment'
 
 
 def _get_client():
@@ -43,66 +43,72 @@ def _load_entity(client, entity_type, entity_id, parent_key=None):
     return entity
 
 
-def _course_from_entity(course_entity):
+def _post_from_entity(post_entity):
     """Translate the Course entity to a regular old Python object."""
 
-    code = course_entity.key.name
-    name = course_entity['name']
-    desc = course_entity['description']
-    course = objects.Course(code, name, desc, [])
-    logging.info('built object from course entity: %s' % (code))
-    return course
+    post_id = post_entity.key.id
+    username = post_entity['username']
+    title = post_entity['title']
+    description = post_entity['description']
+    price = post_entity['price']
+    condition = post_entity['condition']
+    image = post_entity['image']
+    date = post_entity['date']
+    post = objects.Post(post_id, username, title, description, price, condition, image, [], date)
+    logging.info('built object from post entity: %s' % (post_id))
+    return post
 
 
-def _lesson_from_entity(lesson_entity, include_content=True):
+def _comment_from_entity(comment_entity):
     """Translate the Lesson entity to a regular old Python object."""
 
-    lesson_id = lesson_entity.key.id
-    title = lesson_entity['title']
-    content = ''
-    if include_content:
-        content = lesson_entity['content']
-    lesson = objects.Lesson(lesson_id, title, content)
-    logging.info('built object from lesson entity: %s' % (title))
-    return lesson
+    comment_id = comment_entity.key.id
+    post_id = comment_entity['post_id']
+    username = comment_entity['username']
+    description = comment_entity['description']
+    date = comment_entity['date']
+
+    comment = objects.Comment(comment_id, post_id, username, description, date)
+    logging.info('built object from comment entity: %s' % (comment_id))
+    return comment
 
 
-def load_course(course_code):
-    """Load a course from the datastore, based on the course code."""
+def load_post(post_id):
+    """Load a post from the datastore, based on the post id."""
 
-    logging.info('loading course: %s' % (course_code))
+    logging.info('loading post: %s' % (post_id))
     client = _get_client()
-    course_entity = _load_entity(client, _COURSE_ENTITY, course_code)
-    logging.info('loaded course: %s' % (course_code))
-    course = _course_from_entity(course_entity)
-    query = client.query(kind=_LESSON_ENTITY, ancestor=course_entity.key)
+    post_entity = _load_entity(client, _POST_ENTITY, post_id)
+    logging.info('loaded post: %s' % (post_id))
+    post = _post_from_entity(post_entity)
+    query = client.query(kind=_COMMENT_ENTITY, ancestor=post_entity.key)
     query.order = ['title']
-    for lesson in query.fetch():
-        course.add_lesson(_lesson_from_entity(lesson, False))
-    logging.info('loaded lessons: %s' % (len(course.lessons)))
-    return course
+    for comment in query.fetch():
+        post.add_comment(_comment_from_entity(comment))
+    logging.info('loaded posts: %s' % (len(post.comments)))
+    return post
 
 
-def load_courses():
-    """Load all of the courses."""
+def load_posts():
+    """Load all of the posts."""
 
     client = _get_client()
-    q = client.query(kind=_COURSE_ENTITY)
-    q.order = ['name']
+    q = client.query(kind=_POST_ENTITY)
+    q.order = ['date']
     result = []
-    for course in q.fetch():
-        result.append(course)
+    for post in q.fetch():
+        result.append(post)
     return result
 
 
-def load_lesson(course_code, lesson_id):
-    """Load a lesson under the given course code."""
+def load_comment(post_id, comment_id):
+    """Load a comment under the given post id."""
 
-    logging.info('loading lesson detail: %s / %s ' % (course_code, lesson_id))
+    logging.info('loading comment detail: %s / %s ' % (post_id, comment_id))
     client = _get_client()
-    parent_key = _load_key(client, _COURSE_ENTITY, course_code)
-    lesson_entity = _load_entity(client, _LESSON_ENTITY, lesson_id, parent_key)
-    return _lesson_from_entity(lesson_entity)
+    parent_key = _load_key(client, _POST_ENTITY, post_id)
+    comment_entity = _load_entity(client, _COMMENT_ENTITY, comment_id, parent_key)
+    return _comment_from_entity(comment_entity)
 
 
 def load_user(email, passwordhash):
@@ -125,7 +131,7 @@ def load_user(email, passwordhash):
             user['bio'])
     return None
 
-
+#GET BACK TO HERE ON SUNDAY!!
 def load_about_user(username):
     """Return a string that represents the "About Me" information a user has
     stored."""
@@ -137,21 +143,21 @@ def load_about_user(username):
         return ''
 
 
-def load_completions(username):
-    """Load a dictionary of coursecode => lessonid => lesson name based on the
-    lessons the user has marked complete."""
+# def load_completions(username):
+#     """Load a dictionary of coursecode => lessonid => lesson name based on the
+#     lessons the user has marked complete."""
 
-    client = _get_client()
-    user_entity = _load_entity(client, _USER_ENTITY, username)
-    courses = dict()
-    for completion in user_entity['completions']:
-        lesson_entity = client.get(completion)
-        course_entity = client.get(completion.parent)
-        code = course_entity.key.name
-        if code not in courses:
-            courses[code] = dict()
-        courses[code][completion.id] = lesson_entity['title']
-    return courses
+#     client = _get_client()
+#     user_entity = _load_entity(client, _USER_ENTITY, username)
+#     courses = dict()
+#     for completion in user_entity['completions']:
+#         lesson_entity = client.get(completion)
+#         course_entity = client.get(completion.parent)
+#         code = course_entity.key.name
+#         if code not in courses:
+#             courses[code] = dict()
+#         courses[code][completion.id] = lesson_entity['title']
+#     return courses
 
 
 def save_user(user, passwordhash):
@@ -185,90 +191,90 @@ def save_about_user(user, first_name, last_name, grad_year, school, photo_url, b
     client.put(user)
 
 
-def save_completion(username, coursecode, lessonid):
-    """Save a completion (i.e., mark a course as completed in the
-    datastore)."""
+# def save_completion(username, coursecode, lessonid):
+#     """Save a completion (i.e., mark a course as completed in the
+#     datastore)."""
 
-    client = _get_client()
-    course_key = _load_key(client, _COURSE_ENTITY, coursecode)
-    lesson_key = _load_key(client, _LESSON_ENTITY, lessonid, course_key)
-    user_entity = _load_entity(client, _USER_ENTITY, username)
-    completions = set()
-    for completion in user_entity['completions']:
-        completions.add(completion)
-    if lesson_key not in completions:
-        user_entity['completions'].append(lesson_key)
-    client.put(user_entity)
+#     client = _get_client()
+#     course_key = _load_key(client, _COURSE_ENTITY, coursecode)
+#     lesson_key = _load_key(client, _LESSON_ENTITY, lessonid, course_key)
+#     user_entity = _load_entity(client, _USER_ENTITY, username)
+#     completions = set()
+#     for completion in user_entity['completions']:
+#         completions.add(completion)
+#     if lesson_key not in completions:
+#         user_entity['completions'].append(lesson_key)
+#     client.put(user_entity)
 
 
-def create_data():
-    """You can use this function to populate the datastore with some basic
-    data."""
+# def create_data():
+#     """You can use this function to populate the datastore with some basic
+#     data."""
 
-    client = _get_client()
-    entity = datastore.Entity(client.key(_USER_ENTITY, 'testuser'),
-                              exclude_from_indexes=[])
-    entity.update({
-        'username': 'testuser',
-        'passwordhash': '',
-        'email': '',
-        'bio': ''
-    })
-    client.put(entity)
+#     client = _get_client()
+#     entity = datastore.Entity(client.key(_USER_ENTITY, 'testuser'),
+#                               exclude_from_indexes=[])
+#     entity.update({
+#         'username': 'testuser',
+#         'passwordhash': '',
+#         'email': '',
+#         'bio': ''
+#     })
+#     client.put(entity)
 
-    entity = datastore.Entity(client.key(_COURSE_ENTITY, 'Course01'),
-                              exclude_from_indexes=['description', 'code'])
-    entity.update({
-        'code': 'Course01',
-        'name': 'First Course',
-        'description': 'This is a description for a test course.  In the \
-future, real courses will have lots of other stuff here to see that will tell \
-you more about their content.',
-    })
-    client.put(entity)
-    entity = datastore.Entity(client.key(_COURSE_ENTITY, 'Course02'),
-                              exclude_from_indexes=['description', 'code'])
-    entity.update({
-        'code': 'Course02',
-        'name': 'Second Course',
-        'description': 'This is also a course description, but maybe less \
-wordy than the previous one.'
-    })
-    client.put(entity)
-    entity = datastore.Entity(client.key(_COURSE_ENTITY,
-                                         'Course01',
-                                         _LESSON_ENTITY),
-                              exclude_from_indexes=['content', 'title'])
-    entity.update({
-        'title': 'Lesson 1: The First One',
-        'content': 'Imagine there were lots of video content and cool things.',
-    })
-    client.put(entity)
-    entity = datastore.Entity(client.key(_COURSE_ENTITY,
-                                         'Course01',
-                                         _LESSON_ENTITY),
-                              exclude_from_indexes=['content', 'title'])
-    entity.update({
-        'title': 'Lesson 2: Another One',
-        'content': '1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11',
-    })
-    client.put(entity)
-    entity = datastore.Entity(client.key(_COURSE_ENTITY,
-                                         'Course02',
-                                         _LESSON_ENTITY),
-                              exclude_from_indexes=['content', 'title'])
-    entity.update({
-        'title': 'Lesson 1: The First One, a Second Time',
-        'content': '<p>Things</p><p>Other Things</p><p>Still More Things</p>',
-    })
+#     entity = datastore.Entity(client.key(_COURSE_ENTITY, 'Course01'),
+#                               exclude_from_indexes=['description', 'code'])
+#     entity.update({
+#         'code': 'Course01',
+#         'name': 'First Course',
+#         'description': 'This is a description for a test course.  In the \
+# future, real courses will have lots of other stuff here to see that will tell \
+# you more about their content.',
+#     })
+#     client.put(entity)
+#     entity = datastore.Entity(client.key(_COURSE_ENTITY, 'Course02'),
+#                               exclude_from_indexes=['description', 'code'])
+#     entity.update({
+#         'code': 'Course02',
+#         'name': 'Second Course',
+#         'description': 'This is also a course description, but maybe less \
+# wordy than the previous one.'
+#     })
+#     client.put(entity)
+#     entity = datastore.Entity(client.key(_COURSE_ENTITY,
+#                                          'Course01',
+#                                          _LESSON_ENTITY),
+#                               exclude_from_indexes=['content', 'title'])
+#     entity.update({
+#         'title': 'Lesson 1: The First One',
+#         'content': 'Imagine there were lots of video content and cool things.',
+#     })
+#     client.put(entity)
+#     entity = datastore.Entity(client.key(_COURSE_ENTITY,
+#                                          'Course01',
+#                                          _LESSON_ENTITY),
+#                               exclude_from_indexes=['content', 'title'])
+#     entity.update({
+#         'title': 'Lesson 2: Another One',
+#         'content': '1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11',
+#     })
+#     client.put(entity)
+#     entity = datastore.Entity(client.key(_COURSE_ENTITY,
+#                                          'Course02',
+#                                          _LESSON_ENTITY),
+#                               exclude_from_indexes=['content', 'title'])
+#     entity.update({
+#         'title': 'Lesson 1: The First One, a Second Time',
+#         'content': '<p>Things</p><p>Other Things</p><p>Still More Things</p>',
+#     })
 
-    client.put(entity)
-    entity = datastore.Entity(client.key(_COURSE_ENTITY,
-                                         'Course02',
-                                         _LESSON_ENTITY),
-                              exclude_from_indexes=['content', 'title'])
-    entity.update({
-        'title': 'Lesson 2: Yes, Another One',
-        'content': '<ul><li>a</li><li>b</li><li>c</li><li>d</li><li></ul>',
-    })
-    client.put(entity)
+#     client.put(entity)
+#     entity = datastore.Entity(client.key(_COURSE_ENTITY,
+#                                          'Course02',
+#                                          _LESSON_ENTITY),
+#                               exclude_from_indexes=['content', 'title'])
+#     entity.update({
+#         'title': 'Lesson 2: Yes, Another One',
+#         'content': '<ul><li>a</li><li>b</li><li>c</li><li>d</li><li></ul>',
+#     })
+#     client.put(entity)
