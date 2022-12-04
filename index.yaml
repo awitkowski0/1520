@@ -1,16 +1,16 @@
 indexes:
 
-- kind: LmsUser
+- kind: User
   properties:
-  - name: username
+  - name: email
   - name: passwordhash
   
-- kind: LmsCourse
+- kind: Post
   properties: 
   - name: name
     direction: desc
 
-- kind: LmsLesson
+- kind: Comment
   ancestor: yes
   properties:
   - name: title
