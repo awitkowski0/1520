@@ -1,0 +1,52 @@
+{% extends '_base.html' %}
+
+<!-- new post -->
+{% block content %}
+
+<div class="createpost">
+    <section>
+        <h2>Create a post.</h2>
+        <p>Upload a URL of a photo of your item, and then fill out the information below (blah blah blah)
+        </p>
+    </section>
+
+    <section class="createpost_form">
+        <form method="post" action="/update">
+            <input type="hidden" name="mode" value="create">
+            <section>
+                <h3>Paste a URL of a picture of your item: </h3>
+                <input type="url" name="file" required>
+            </section>
+            <section>
+                <h3>What is your item? (e.g., calculus I textbook, sofa)</h3>
+                <input type="text" name="title" required>
+            </section>
+            <section>
+                <h3>What is your asking price?</h3>
+                <input type="number" required name="price" min="0" value="0" step="0.01">
+            </section>
+            <section>
+                <h3>Where can someone pick up your item? (e.g., North Oakland, Oakland Ave)</h3>
+                <input type="text" required>
+            </section>
+            <section>
+                <h3>What is the condition of your item?</h3>
+                <select>
+                    <option value="">New</option>
+                    <option value="">Like New</option>
+                    <option value="">Very Good</option>
+                    <option value="">Good</option>
+                    <option value="">Acceptable</option>
+                </select>
+            </section>
+            <section>
+                <h3>Add anything else you'd like a buyer to know.</h3>
+                <textarea name="description" rows='6' cols='40'></textarea>
+            </section>
+            <br>
+            <input type="submit" value="Post">
+        </form>
+    </section>
+</div>
+
+{% endblock %}

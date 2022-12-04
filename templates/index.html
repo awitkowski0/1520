@@ -1,4 +1,73 @@
 {% extends '_base.html' %}
+
+<!-- News feed content will be on the main page -->
 {% block content %}
-Welcome! Here you will find all sorts of free programming courses & lessons.
+
+<div class="newsfeed">
+    <div class="content-2"></div>
+    <div class="content-8">
+        <!-- For loop logic of jinja? template -->
+
+        {%for post in news_feed%}
+        <div class="container">
+            <div class="row">
+                <div class="content-2">
+                    <a href="/{{post.username}}}}">
+                        <div class="profile-pic">
+                            <img src="/static/assets/{{post.profile}}" alt={{post.display}}>
+                        </div>
+                    </a>
+                </div>
+                <div class="content-4">
+                    <h1 class="title">{{post.display}}</h1>
+                    <h2 class="date">{{post.date}}</h2>
+                </div>
+                <div class="content-1 edit">
+                    {% if user.username == post.username %}
+                    <a href="/editpost?id={{post.post_id}}">
+                        <img src="../static/assets/pencil-icon.png" alt="edit">
+                    </a>
+                    {% endif %}
+                </div>
+                <!-- delete post -->
+                <div class="content-1 delete">
+                    {% if user.username == post.username %}
+                    <a href="/delete?id={{post.post_id}}">
+                        <img src="../static/assets/delete-icon.png" alt="delete">
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="row">
+                <div class="content-8">
+                    <p class="description">{{post.description}}</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="content-8">
+                    <div class="post-image">
+                        <img src="{{post.image}}" class="post-image">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="content-1">
+                    <div class="profile-pic">
+                        <img src="/static/assets/{{post.profile_image}}" class="profile-pic">
+                    </div>
+                </div>
+                <div class="content-7">
+                    <div class="comment">
+                        <form>
+                            <input type="text" id="comment" placeholder="Add a comment...">
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div><br /><br />
+        {% endfor %}
+    </div>
+    <div class="content-2"></div>
+
+</div>
 {% endblock %}

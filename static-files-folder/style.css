@@ -1,0 +1,203 @@
+/* Set base Text & Background*/
+body {
+    font-family: 'helvetica', sans-serif;
+    font-display: fallback;
+    background-color: #003594;
+}
+
+/* Top nav bar*/
+.nav {
+    background-color: rgba(0, 53, 148);
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: repeat(15, 1fr);
+}
+
+/* Navigation buttons */
+.nav a {
+    background-color: rgba(0, 53, 148);
+    color: #f6f2ea;
+    float: left;
+    padding: 16px 32px;
+    text-decoration: none;
+    font-size: 20px;
+}
+/* CSS for the logo in the navigation */
+.nav img {
+    width: 120px;
+    background-color: rgba(0, 53, 148);
+    float: left;
+    padding: 16px 32px;
+}
+
+/* Change the href based on if the user is hovering */
+.nav a:hover, a.split:hover {
+    background-color: rgba(133, 149, 179, 0.866);
+    color: #f6f2ea;
+}
+
+/* Create a right-aligned (split) link inside the navigation bar */
+.nav a.split {
+    float: right;
+    color: #f6f2ea;
+}
+
+/* Funny little gold stripe*/
+.stripe {
+    /* Create a gold stripe... why not? */
+    background-color: #ffb81c;
+}
+
+/* The newsfeed background, just offsets color*/
+.newsfeed {
+    /* Off-white for readability, sourced color codes from pitt.edu site */
+    background-color: #f6f2ea;
+
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+}
+
+.newsfeed button {
+    padding: 10px;
+    width: 75%;
+    font-size: 1.5v;
+    background-color: rgba(0, 53, 148);;
+    border-radius: 10px;
+    color: #f6f2ea
+}
+
+.newsfeed button:hover {
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.content-1 {
+    grid-column: span 1;
+}
+.content-2 {
+    grid-column: span 2;
+}
+.content-3 {
+    grid-column: span 3;
+}
+.content-4 {
+    grid-column: span 4;
+}
+.content-5 {
+    grid-column: span 5;
+}
+.content-6 {
+    grid-column: span 5;
+}
+.content-7 {
+    grid-column: span 7;
+}
+.content-8 {
+    grid-column: span 8;
+}
+
+.container {
+    background-color: #a9a8a7;
+    border-color: #7a7978;
+    border-radius: 10px;
+}
+
+.row {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+}
+
+.post-image img {
+    display: block;
+    width: 80%;
+    margin-left: auto; 
+    margin-right: auto;
+}
+
+.comment {
+    color: #232222;
+    float: left;
+    padding: 8px 8px;
+    text-decoration: none;
+    font-size: 20px;
+}
+
+.description {
+    margin-left:20px;
+}
+
+/* Sign up page */
+.signup {
+    background-color: #f6f2ea;
+    text-align: center;
+}
+
+.signup_form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container_login {
+    background-color: #f6f2ea;
+    text-align: center;
+}
+
+
+/* Login page */
+.login {
+    background-color: #f6f2ea;
+    text-align: center;
+}
+
+.login_form{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container_signin {
+    background-color: #f6f2ea;
+    text-align: center;
+}
+
+/* Searchbar */
+.searchbar input{
+    width: 90%;
+    height: 90%;
+    float: left;
+    border: 3px solid #ccc;
+    font-size: 20px;
+    padding: 8px 8px;
+    background-color: transparent;
+}
+
+/* Create Post */
+.createpost {
+    background-color: #f6f2ea;
+}
+
+/* Edit Icon */ 
+.edit img {
+    width: 25%;
+    float: right; 
+}
+
+.content-1.edit {
+    padding: 10px;
+}
+
+/* Edit Post */
+.editpost {
+    background-color: #f6f2ea;
+}
+
+/* Delete Icon */ 
+.content-1.delete {
+    padding: 10px;
+}
+
+.delete img {
+    width: 25%;
+    float: right; 
+}

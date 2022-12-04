@@ -1,39 +1,97 @@
 {% extends '_base.html' %}
-{% block header %}
-Progress for {{page_title}}
-{% endblock %}
+
+<!-- News feed content will be on the main page -->
 {% block content %}
-{% 
-if completions 
-%}
-<div class="CompletedLessons">
-    <h2>Completed Lessons</h2>
-    <ul>
-{%
-    for course in completions 
-%}
-        <li>{{course}}</li>
-        <ol>
-{% 
-        for lesson in completions[course]
-%}
-            <li>{{lesson}}</li>
-{%
-        endfor
-%}
-        </ol>
-{% 
-    endfor
-%}
-    </ul>
-</div>
-{% 
-endif
-%}
-<h2>About {{page_title}}</h2>
-{% for line in lines %}
-{{line}}<br>
-{% else %}
-<i>No details.</i>
-{% endfor %}
+<section class="profile">
+    <div class="left-col">
+        <div class="profile-pic">
+            <img src="/s/assets/guillaume-bolduc-SGzbP-t1vlg-unsplash.jpg" alt="profile picture">
+        </div>
+        <div class="menu">
+            <div>
+                <button id="my_posts_button" onclick="manageMenu('my_posts')">My Posts</button>
+            </div>
+            <div class="">
+                <button id="account_details_button" onclick="manageMenu('account_details')">Account Details</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="right-col">
+        <div id="my_posts">
+
+            <div class="content-2"></div>
+                <div class="content-8" id="content-8">
+
+                    {%for post in news_feed%}
+                    {% if user.username == post.username %}
+                    <div class="container">
+                        <div class="row">
+                            <div class="content-2">
+                                <a href="/{{post.username}}}}">
+                                    <div class="profile-pic">
+                                        <img src="/s/assets/{{post.profile}}" alt={{post.display}}>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="content-4">
+                                <h1 class="title">{{post.display}}</h1>
+                                <h2 class="date">{{post.date}}</h2>
+                            </div>
+                            <div class="content-1 edit">
+                                {% if user.username == post.username %}
+                                <a href="/editpost?id={{post.post_id}}">
+                                    <img src="../s/assets/pencil-icon.png" alt="edit">
+                                </a>
+                                {% endif %}
+                            </div>
+                            <!-- delete post -->
+                            <div class="content-1 delete">
+                                {% if user.username == post.username %}
+                                <a href="/delete?id={{post.post_id}}">
+                                    <img src="../s/assets/delete-icon.png" alt="delete">
+                                </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="content-8">
+                                <p class="description">{{post.description}}</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="content-8">
+                                <div class="post-image">
+                                    <img src="{{post.image}}" class="post-image">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="content-1">
+                                <div class="profile-pic">
+                                    <img src="/s/assets/{{post.profile_image}}" class="profile-pic">
+                                </div>
+                            </div>
+                            <div class="content-7">
+                                <div class="comment">
+                                    <form>
+                                        <input type="text" id="comment" placeholder="Add a comment...">
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div><br /><br />
+                    {% endif %}
+                    {%endfor%}
+
+        </div>
+    </div>
+
+    <div id="account_details">
+        <p>{{user.first_name}} {{user.last_name}} {{user.username}} | Student at Pitt</p>
+        <p>PUT ACCOUNT DETAILS HERE LATER!!!!!</p>
+    </div>
+
+</section>
+
 {% endblock %}

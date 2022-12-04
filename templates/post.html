@@ -1,0 +1,76 @@
+{% extends '_base.html' %}
+
+<!-- News feed content will be on the main page -->
+{% block content %}
+<section class="post">
+    <div class="container">
+        <form method="post" action="/update" enctype="multipart/form-data">
+
+            {% if page_title == "Create Post" %}
+                <input type="hidden" name="mode" value="create">
+                <input type="hidden" name="id" value="None">
+            {% else %}
+                <input type="hidden" name="mode" value="edit">
+                <input type="hidden" name="id" value="{{ post.post_id }}">
+            {% endif %}
+
+            <div class="row">
+                <div class="content-2">
+                    <a href="/{{post.username}}}}">
+                        <div class="profile-pic">
+                            <img src="/static/assets/{{post.profile}}" alt={{post.display}}>
+                        </div>
+                    </a>
+                </div>
+                <div class="content-5">
+                    <label>Title</label>
+                    <input type="text" class="title" name="title" value='{{post.display}}'>
+                    <!-- <h2 class="date">{{post.date}}</h2> -->
+                </div>
+                <div class="content-1 edit">
+                    <input type="submit" value="update">
+                    <!-- <a>
+                        <img src="../static/assets/pencil-icon.png" alt="edit">
+                    </a> -->
+                </div>
+            </div>
+            <div class="row">
+                <div class="content-8">
+                    <label>Description</label>
+                    <input type="textbox" class="description" name="description" value='{{post.description}}'>
+                </div>
+            </div>
+            <div class="row">
+                <div class="content-8">
+                    <div class="post-image">
+                        {% if post.image == "" %}
+                            <label>Add Image: </label>
+                            <input type="file" class="file-upload" name="file" accept="image/png, image/jpeg">
+                        {% else %}
+                            <img src="/static/assets/{{post.image}}" class="post-image"><br>
+                            <label>Add Different Image: </label>
+                            <input type="file" class="file-upload" name="file" accept="image/png, image/jpeg">
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <!-- <div class="row">
+                <div class="content-1">
+                    <div class="profile-pic">
+                        <img src="/static/assets/{{post.profile_image}}" class="profile-pic">
+                    </div>
+                </div>
+                <div class="content-7">
+                    <div class="comment">
+                        <form>
+                            <input type="text" id="comment" placeholder="Add a comment...">
+                        </form>
+                    </div>
+                </div>
+            </div> -->
+        </form>
+    </div>
+</section>
+
+
+{% endblock %}

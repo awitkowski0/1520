@@ -143,23 +143,6 @@ def load_about_user(username):
         return ''
 
 
-# def load_completions(username):
-#     """Load a dictionary of coursecode => lessonid => lesson name based on the
-#     lessons the user has marked complete."""
-
-#     client = _get_client()
-#     user_entity = _load_entity(client, _USER_ENTITY, username)
-#     courses = dict()
-#     for completion in user_entity['completions']:
-#         lesson_entity = client.get(completion)
-#         course_entity = client.get(completion.parent)
-#         code = course_entity.key.name
-#         if code not in courses:
-#             courses[code] = dict()
-#         courses[code][completion.id] = lesson_entity['title']
-#     return courses
-
-
 def save_user(user, passwordhash):
     """Save the user details to the datastore."""
 
@@ -190,21 +173,6 @@ def save_about_user(user, first_name, last_name, grad_year, school, photo_url, b
     user['bio'] = bio
     client.put(user)
 
-
-# def save_completion(username, coursecode, lessonid):
-#     """Save a completion (i.e., mark a course as completed in the
-#     datastore)."""
-
-#     client = _get_client()
-#     course_key = _load_key(client, _COURSE_ENTITY, coursecode)
-#     lesson_key = _load_key(client, _LESSON_ENTITY, lessonid, course_key)
-#     user_entity = _load_entity(client, _USER_ENTITY, username)
-#     completions = set()
-#     for completion in user_entity['completions']:
-#         completions.add(completion)
-#     if lesson_key not in completions:
-#         user_entity['completions'].append(lesson_key)
-#     client.put(user_entity)
 
 
 # def create_data():

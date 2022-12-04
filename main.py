@@ -14,7 +14,7 @@ app.secret_key = b'oaijrwoizsdfmnvoiajw34foinmzsdv98j234'
 @app.route('/index.htm')
 @app.route('/index.html')
 def root():
-    post_list = datastore.load_courses()
+    post_list = datastore.load_posts()
     return show_page('index.html', 'Home Page', posts=post_list)
 
 
@@ -126,18 +126,14 @@ def saveprofile():
 def user_page(username):
     about = datastore.load_about_user(username)
     about_lines = about.splitlines()
-    completions = datastore.load_completions(username)
 
     # We use the following loop to sort the lessons in lexical order.
-    for course in completions:
-        lesson_list = []
-        for lesson_id in completions[course]:
-            lesson_list.append(completions[course][lesson_id])
-        lesson_list.sort()
-        completions[course] = lesson_list
 
-    return show_page('user.html', username, lines=about_lines,
-                     completions=completions)
+    return show_page('user.html', username, lines=about_lines)
+
+@app.route('/createpost')
+def createpost():
+    return show_page('createpost.html', 'Create Post')
 
 
 # We should only use this to populate our data for the first time.
@@ -168,8 +164,8 @@ def show_login_page():
     return show_page('/signin.html', 'Sign In', errors)
 
 
-def show_page(page, title, posts=None, post=None, comment=None,
-              completions=None, show=True, text=None, lines=None, errors=None):
+def show_page(page, title, user=None, posts=None, post=None, comment=None,
+              show=True, text=None, lines=None, errors=None):
     return flask.render_template(page,
                                  page_title=title,
                                  user=get_user(),
@@ -177,7 +173,6 @@ def show_page(page, title, posts=None, post=None, comment=None,
                                  post=post,
                                  comment=comment,
                                  show=show,
-                                 completions=completions,
                                  text=text,
                                  lines=lines,
                                  errors=errors)

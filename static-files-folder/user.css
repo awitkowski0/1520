@@ -1,0 +1,110 @@
+/* Profile Page Layout */
+.profile {
+    background-color: #f6f2ea;
+    display: flex;
+}
+
+.left-col {
+    width: 33%;
+    margin: 10px;
+}
+
+.right-col {
+    width: 67%;
+    margin: 20px;
+    height: 75vh;
+}
+
+/* Left Column */
+
+.profile-pic {
+    display: inline-block;
+    overflow: hidden;
+    width: 60%;
+    /* padding and height makes a square */
+    padding-bottom: 60%; 
+    height: 0;
+    position: relative;
+    
+    margin-top: 25px;
+    margin-bottom: 25px;
+
+    /* Centers profile pic */
+    margin-left: 20%;
+    margin-right: 20%;
+}
+
+.profile-pic img {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    border-radius: 50%;
+    
+    /* maintains image ratio */
+    object-fit: cover; 
+}
+
+.menu div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.menu button {
+    padding: 10px;
+    width: 75%;
+    font-size: 1.5vw;
+    border: none;
+    background-color: #f6f2ea;
+}
+
+.menu button:hover {
+    cursor: pointer;
+    font-weight: bold;
+}
+
+#my_posts_button {
+    font-weight: bold;
+}
+
+#account_details_button, #settings_button {
+    font-weight: normal;
+}
+
+#logout_button {
+    margin-top: 50px;
+    background-color: red;
+    color: #f6f2ea;
+    width: 25%;
+    border-radius: 12px;
+}
+
+#logout_button:hover {
+    width: 28%
+}
+
+/* Right Column */
+
+#my_posts {
+    display: block;
+    overflow-y: auto;
+    height: 100%;
+}
+
+.no_posts {
+    text-align: center;
+}
+
+#account_details {
+    display: none;
+    text-align: center;
+}
+
+#acc_details_name {
+    font-size: large;
+}
+
+#settings {
+    display: none;
+    text-align: center;
+}
