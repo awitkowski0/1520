@@ -135,6 +135,31 @@ def user_page(username):
 def createpost():
     return show_page('createpost.html', 'Create Post')
 
+########### LEFT OFF HERE!!! 
+@app.route('/update', methods=['POST', 'GET'])
+def update():
+    user = get_user()
+
+    username = user.username
+    image = flask.request.form.get('image')
+    title = flask.request.form.get('title')
+    price = flask.request.form.get('price')
+    condition = flask.request.form.get('condition')
+    description = flask.request.form.get('description')
+
+    post = objects.Post(
+        post_id
+        username,
+        title,
+        description,
+        price,
+        condition,
+        image,
+        comments
+    )
+
+    return root() 
+
 
 # We should only use this to populate our data for the first time.
 @app.route('/createdata')

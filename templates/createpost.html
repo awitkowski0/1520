@@ -15,7 +15,7 @@
             <input type="hidden" name="mode" value="create">
             <section>
                 <h3>Paste a URL of a picture of your item: </h3>
-                <input type="url" name="file" required>
+                <input type="url" name="image" required>
             </section>
             <section>
                 <h3>What is your item? (e.g., calculus I textbook, sofa)</h3>
@@ -26,12 +26,8 @@
                 <input type="number" required name="price" min="0" value="0" step="0.01">
             </section>
             <section>
-                <h3>Where can someone pick up your item? (e.g., North Oakland, Oakland Ave)</h3>
-                <input type="text" required>
-            </section>
-            <section>
                 <h3>What is the condition of your item?</h3>
-                <select>
+                <select name="condition">
                     <option value="">New</option>
                     <option value="">Like New</option>
                     <option value="">Very Good</option>

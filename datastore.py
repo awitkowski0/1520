@@ -44,7 +44,7 @@ def _load_entity(client, entity_type, entity_id, parent_key=None):
 
 
 def _post_from_entity(post_entity):
-    """Translate the Course entity to a regular old Python object."""
+    """Translate the post entity to a regular old Python object."""
 
     post_id = post_entity.key.id
     username = post_entity['username']
@@ -60,7 +60,7 @@ def _post_from_entity(post_entity):
 
 
 def _comment_from_entity(comment_entity):
-    """Translate the Lesson entity to a regular old Python object."""
+    """Translate the comment entity to a regular old Python object."""
 
     comment_id = comment_entity.key.id
     post_id = comment_entity['post_id']
@@ -173,6 +173,21 @@ def save_about_user(user, first_name, last_name, grad_year, school, photo_url, b
     user['bio'] = bio
     client.put(user)
 
+def save_post(post):
+    """Save post info to the datastore"""
+
+    client = _get_client()
+    entity = datastore.Entity(_load_key(client, _POST_ENTITY, post.post_id))
+    entity['post_id'] = entity.key.id
+    entity['username'] = post.username
+    entity['title'] = post.title
+    entity['description'] = post.description
+    entity['price'] = post.price
+    entity['condition'] = post.condition
+    entity['image'] = post.image
+    entity['date'] = post.date
+
+    client.put(entity)
 
 
 # def create_data():
