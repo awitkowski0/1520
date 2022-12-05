@@ -16,28 +16,25 @@
             <input type="hidden" name="id" value="{{post.post_id}}">
             <section>
                 <h3>Paste a URL of a picture of your item: </h3>
-                <input type="url" name="file" value="{{post.image}}" required>
+                <input type="url" name="image" value="{{post.image}}" required>
             </section>
             <section>
                 <h3>What is your item? (e.g., calculus I textbook, sofa)</h3>
-                <input type="text" name="title" value="{{post.display}}" required>
+                <input type="text" name="title" value="{{post.title}}" required>
             </section>
             <section>
                 <h3>What is your asking price?</h3>
-                <input type="number" required name="price" min="0" value="0" step="0.01">
-            </section>
-            <section>
-                <h3>Where can someone pick up your item? (e.g., North Oakland, Oakland Ave)</h3>
-                <input type="text" required>
+                <input type="number" required name="price" min="0" value="{{post.price}}" step="0.01">
             </section>
             <section>
                 <h3>What is the condition of your item?</h3>
-                <select>
-                    <option value="">New</option>
-                    <option value="">Like New</option>
-                    <option value="">Very Good</option>
-                    <option value="">Good</option>
-                    <option value="">Acceptable</option>
+                <select name="condition" value="{{post.condition}}">
+                    <option value="New" {% if post.condition=='New' %} selected {%endif%}>New</option>
+                    <option value="Like New" {% if post.condition=='Like New' %} selected {%endif%}>Like New</option>
+                    <option value="Very Good" {% if post.condition=='Very Good' %} selected {%endif%}>Very Good</option>
+                    <option value="Good" {% if post.condition=='Good' %} selected {%endif%}>Good</option>
+                    <option value="Acceptable" {% if post.condition=='Acceptable' %} selected {%endif%}>Acceptable
+                    </option>
                 </select>
             </section>
             <section>

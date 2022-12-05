@@ -1,36 +1,46 @@
 <!DOCTYPE html>
 
 <html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>{{site_name}} | {{page_title}}</title>
-        <link href="/s/style.css" rel="stylesheet" type="text/css" />
-        <link href="/s/user.css" rel="stylesheet" type="text/css" />
-        <script src="/s/script.js" type="text/javascript"></script>
-        
-    </head>
-    <body>
-        <div class="nav">
-            <a href="/" class="NavLink">Home</a>
-            {% if not user %}
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Roc's Marketplace | {{page_title}}</title>
+    <link href="/s/style001.css" rel="stylesheet" type="text/css" />
+    <link href="/s/user.css" rel="stylesheet" type="text/css" />
+    <script src="/s/script.js" type="text/javascript"></script>
+
+</head>
+
+<body>
+    <div class="nav">
+        {% if not user %}
+        <div class="left"><a href="/" class="NavLink">Home</a></div>
+        <div class="right">
             <a href="/signup" class="NavLink">Sign Up</a>
             <a href="/signin" class="NavLink">Sign In</a>
-            {% else %}
+        </div>
+        {% else %}
+        <div class="left">
+            <a href="/" class="NavLink">Home</a>
             <a href="/createpost" class="NavLink">Create Post</a>
             <a href="/user/{{user}}">My Info</a>
+        </div>
+        <div class="right">
             <a href="/signout" class="NavLink">Sign Out</a>
-            {% endif %}
         </div>
-        <header>{% if errors %}{% for error in errors %}
-            <div class="Error">{{error}}</div>
-            {% endfor %}{% endif %}
-        </header>
-        <div class="stripe">
-            <br />
-        </div>
-        <section>
-            {% block content %}{% endblock %}
-        </section>
-    </body>
+        {% endif %}
+    </div>
+    <header>{% if errors %}{% for error in errors %}
+        <div class="Error">{{error}}</div>
+        {% endfor %}{% endif %}
+    </header>
+    <div class="stripe">
+        <br />
+    </div>
+    <section>
+        {% block content %}{% endblock %}
+    </section>
+</body>
+
 </html>

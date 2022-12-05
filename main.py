@@ -1,4 +1,5 @@
 from email.utils import parseaddr
+import datetime
 
 import flask
 import hashlib
@@ -15,6 +16,9 @@ app.secret_key = b'oaijrwoizsdfmnvoiajw34foinmzsdv98j234'
 @app.route('/index.html')
 def root():
     post_list = datastore.load_posts()
+    if get_user():
+        userObj = datastore.load_user_from_username(get_user()+'@pitt.edu')
+        return show_page('index.html', 'Home Page', posts=post_list, userObj=userObj)
     return show_page('index.html', 'Home Page', posts=post_list)
 
 
@@ -74,11 +78,11 @@ def register_user():
     user = objects.User(
         username,
         email,
-        first_name, 
-        last_name, 
-        grad_year, 
-        school, 
-        photo_url, 
+        first_name,
+        last_name,
+        grad_year,
+        school,
+        photo_url,
         bio
     )
     if errors:
@@ -87,15 +91,15 @@ def register_user():
         passwordhash = get_password_hash(password1)
         datastore.save_user(user, passwordhash)
         flask.session['user'] = user.username
-        return flask.redirect('/courses')
+        return flask.redirect('/')
 
 
 @app.route('/editprofile')
 def editprofile():
     user = get_user()
     if user:
-        about = datastore.load_about_user(user)
-        return show_page('edit_profile.html', 'Edit Info for ' + user, text=about)
+        userObj = datastore.load_user_from_username(user+'@pitt.edu')
+        return show_page('edit_profile.html', 'Edit Info for ' + user, userObj=userObj)
     return show_login_page()
 
 
@@ -103,6 +107,7 @@ def editprofile():
 def saveprofile():
     user = get_user()
     if user:
+        post_list = datastore.load_posts()
         first_name = flask.request.form.get('first_name')
         last_name = flask.request.form.get('last_name')
         grad_year = flask.request.form.get('grad_year')
@@ -111,13 +116,19 @@ def saveprofile():
         bio = flask.request.form.get('bio')
         datastore.save_about_user(
             user,
-            first_name, 
-            last_name, 
-            grad_year, 
-            school, 
-            photo_url, 
+            first_name,
+            last_name,
+            grad_year,
+            school,
+            photo_url,
             bio
         )
+
+        for post_entity in post_list:
+            if post_entity['username'] == user:
+                post = datastore._post_from_entity(post_entity)
+                post.profile_pic = photo_url
+                datastore.update_post(post)
         return flask.redirect('/user/' + user)
     return show_login_page()
 
@@ -126,42 +137,84 @@ def saveprofile():
 def user_page(username):
     about = datastore.load_about_user(username)
     about_lines = about.splitlines()
+    post_list = datastore.load_posts()
+    userObj = datastore.load_user_from_username(username+'@pitt.edu')
 
     # We use the following loop to sort the lessons in lexical order.
 
-    return show_page('user.html', username, lines=about_lines)
+    return show_page('user.html', username, userObj=userObj, posts=post_list)
+
 
 @app.route('/createpost')
 def createpost():
     return show_page('createpost.html', 'Create Post')
 
-########### LEFT OFF HERE!!! 
+# LEFT OFF HERE!!!
+
+
 @app.route('/update', methods=['POST', 'GET'])
 def update():
     user = get_user()
+    userObj = datastore.load_user_from_username(user+'@pitt.edu')
 
-    username = user.username
+    username = user
+    profile_pic = userObj.photo_url
     image = flask.request.form.get('image')
     title = flask.request.form.get('title')
     price = flask.request.form.get('price')
     condition = flask.request.form.get('condition')
     description = flask.request.form.get('description')
+    mode = flask.request.values['mode']
 
-    post = objects.Post(
-        post_id
-        username,
-        title,
-        description,
-        price,
-        condition,
-        image,
-        comments
-    )
+    time = datetime.datetime.now().strftime('%a, %B %d, %Y at %H:%M:%S')
+    post_id = username + time
 
-    return root() 
+    if mode == 'create':
+        post = objects.Post(
+            post_id,
+            username,
+            profile_pic,
+            title,
+            description,
+            price,
+            condition,
+            image,
+            []
+        )
+        datastore.save_post(post)
+    else:
+        id = flask.request.values['id']
+        post = datastore.load_post(id)
 
+        post.image = image
+        post.title = title
+        post.price = price
+        post.condition = condition
+        post.description = description
+        post.date = time
+
+        datastore.update_post(post)
+
+    return flask.redirect('/')
+
+
+@app.route('/editpost')
+def editpost():
+    id = flask.request.values['id']
+    post = datastore.load_post(id)
+
+    return show_page('editpost.html', 'Edit Post', post=post)
+
+
+@app.route('/delete')
+def delete():
+    id = flask.request.values['id']
+    datastore.delete_post(id)
+    return flask.redirect('/')
 
 # We should only use this to populate our data for the first time.
+
+
 @app.route('/createdata')
 def createdata():
     datastore.create_data()
@@ -189,11 +242,12 @@ def show_login_page():
     return show_page('/signin.html', 'Sign In', errors)
 
 
-def show_page(page, title, user=None, posts=None, post=None, comment=None,
+def show_page(page, title, user=None, userObj=None, posts=None, post=None, comment=None,
               show=True, text=None, lines=None, errors=None):
     return flask.render_template(page,
                                  page_title=title,
                                  user=get_user(),
+                                 userObj=userObj,
                                  posts=posts,
                                  post=post,
                                  comment=comment,

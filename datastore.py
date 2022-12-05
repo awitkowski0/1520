@@ -4,7 +4,7 @@ import objects
 import logging
 
 
-### Your data storage code goes here.
+# Your data storage code goes here.
 # Look at: https://console.cloud.google.com/datastore to see your live
 # entities.
 
@@ -46,15 +46,18 @@ def _load_entity(client, entity_type, entity_id, parent_key=None):
 def _post_from_entity(post_entity):
     """Translate the post entity to a regular old Python object."""
 
-    post_id = post_entity.key.id
+    post_id = post_entity['post_id']
     username = post_entity['username']
+    profile_pic = post_entity['profile_pic']
     title = post_entity['title']
     description = post_entity['description']
     price = post_entity['price']
     condition = post_entity['condition']
     image = post_entity['image']
     date = post_entity['date']
-    post = objects.Post(post_id, username, title, description, price, condition, image, [], date)
+    created = post_entity['created']
+    post = objects.Post(post_id, username, profile_pic, title, description,
+                        price, condition, image, [], date, created)
     logging.info('built object from post entity: %s' % (post_id))
     return post
 
@@ -81,11 +84,11 @@ def load_post(post_id):
     post_entity = _load_entity(client, _POST_ENTITY, post_id)
     logging.info('loaded post: %s' % (post_id))
     post = _post_from_entity(post_entity)
-    query = client.query(kind=_COMMENT_ENTITY, ancestor=post_entity.key)
-    query.order = ['title']
-    for comment in query.fetch():
-        post.add_comment(_comment_from_entity(comment))
-    logging.info('loaded posts: %s' % (len(post.comments)))
+    # query = client.query(kind=_COMMENT_ENTITY, ancestor=post_entity.key)
+    # query.order = ['title']
+    # for comment in query.fetch():
+    #     post.add_comment(_comment_from_entity(comment))
+    # logging.info('loaded posts: %s' % (len(post.comments)))
     return post
 
 
@@ -94,7 +97,8 @@ def load_posts():
 
     client = _get_client()
     q = client.query(kind=_POST_ENTITY)
-    q.order = ['date']
+    q.order = ["-created"]
+
     result = []
     for post in q.fetch():
         result.append(post)
@@ -107,7 +111,8 @@ def load_comment(post_id, comment_id):
     logging.info('loading comment detail: %s / %s ' % (post_id, comment_id))
     client = _get_client()
     parent_key = _load_key(client, _POST_ENTITY, post_id)
-    comment_entity = _load_entity(client, _COMMENT_ENTITY, comment_id, parent_key)
+    comment_entity = _load_entity(
+        client, _COMMENT_ENTITY, comment_id, parent_key)
     return _comment_from_entity(comment_entity)
 
 
@@ -124,14 +129,36 @@ def load_user(email, passwordhash):
             user['username'],
             user['email'],
             user['first_name'],
-            user['last_name'], 
-            user['grad_year'], 
-            user['school'], 
-            user['photo_url'], 
+            user['last_name'],
+            user['grad_year'],
+            user['school'],
+            user['photo_url'],
             user['bio'])
     return None
 
-#GET BACK TO HERE ON SUNDAY!!
+
+def load_user_from_username(email):
+    """Load a user based on the passwordhash; if the passwordhash doesn't match
+    the username, then this should return None."""
+
+    client = _get_client()
+    q = client.query(kind=_USER_ENTITY)
+    q.add_filter('email', '=', email)
+    for user in q.fetch():
+        return objects.User(
+            user['username'],
+            user['email'],
+            user['first_name'],
+            user['last_name'],
+            user['grad_year'],
+            user['school'],
+            user['photo_url'],
+            user['bio'])
+    return None
+
+# GET BACK TO HERE ON SUNDAY!!
+
+
 def load_about_user(username):
     """Return a string that represents the "About Me" information a user has
     stored."""
@@ -173,13 +200,32 @@ def save_about_user(user, first_name, last_name, grad_year, school, photo_url, b
     user['bio'] = bio
     client.put(user)
 
+
 def save_post(post):
     """Save post info to the datastore"""
 
     client = _get_client()
     entity = datastore.Entity(_load_key(client, _POST_ENTITY, post.post_id))
-    entity['post_id'] = entity.key.id
+    entity['post_id'] = post.post_id
     entity['username'] = post.username
+    entity['profile_pic'] = post.profile_pic
+    entity['title'] = post.title
+    entity['description'] = post.description
+    entity['price'] = post.price
+    entity['condition'] = post.condition
+    entity['image'] = post.image
+    entity['comments'] = post.comments
+    entity['date'] = post.date
+    entity['created'] = post.created
+
+    client.put(entity)
+
+
+def update_post(post):
+    client = _get_client()
+    entity = _load_entity(client, _POST_ENTITY, post.post_id)
+
+    entity['profile_pic'] = post.profile_pic
     entity['title'] = post.title
     entity['description'] = post.description
     entity['price'] = post.price
@@ -188,6 +234,12 @@ def save_post(post):
     entity['date'] = post.date
 
     client.put(entity)
+
+
+def delete_post(id):
+    client = _get_client()
+    key = client.key(_POST_ENTITY, id)
+    client.delete(key)
 
 
 # def create_data():

@@ -3,7 +3,7 @@ accountMenuOptions = [
 ]
 
 function manageMenu(selected) {
-    for (let i = 0; i < accountMenuOptions.length; i++){
+    for (let i = 0; i < accountMenuOptions.length; i++) {
         if (accountMenuOptions[i] == selected) {
             document.getElementById(accountMenuOptions[i] + '_button').style.fontWeight = 'bold';
             document.getElementById(accountMenuOptions[i]).style.display = 'block';
@@ -20,7 +20,7 @@ function manageMenu(selected) {
 function MyPostsDefault() {
     el = document.getElementById('content-8');
     if (el != null && el.textContent.trim() === '') {
-        el.innerHTML = '<p class="no_posts">No posts yet. Make your first post today! </p>';
+        el.innerHTML = '<p class="no_posts">No posts yet </p>';
     }
 }
 

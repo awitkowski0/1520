@@ -1,6 +1,8 @@
 import datetime
 
-### Your application objects go here.
+# Your application objects go here.
+
+
 class Course(object):
     """Represents a course."""
 
@@ -42,6 +44,8 @@ class Lesson(object):
         }
 
 # User obj
+
+
 class User(object):
     """A user for the application."""
 
@@ -54,7 +58,6 @@ class User(object):
         self.school = school
         self.photo_url = photo_url
         self.bio = bio
-        
 
     def to_dict(self):
         return {
@@ -69,6 +72,8 @@ class User(object):
         }
 
 # Comment obj
+
+
 class Comment(object):
     def __init__(self, comment_id, post_id, username, description, date):
         self.comment_id = comment_id
@@ -91,10 +96,13 @@ class Comment(object):
         }
 
 # Post obj
+
+
 class Post(object):
-    def __init__(self, post_id, username, title, description, price, condition, image, comments: list, date):
+    def __init__(self, post_id, username, profile_pic, title, description, price, condition, image, comments: list, date=None, created=None):
         self.post_id = post_id
         self.username = username
+        self.profile_pic = profile_pic
         self.title = title
         self.description = description
         self.price = price
@@ -107,6 +115,8 @@ class Post(object):
         else:
             self.date = datetime.datetime.now().strftime('%a, %B %d, %Y at %H:%M:%S')
 
+        self.created = str(datetime.datetime.now())
+
     def add_comment(self, comment):
         self.comments.append(comment)
 
@@ -114,13 +124,15 @@ class Post(object):
         d = {
             'post_id': self.post_id,
             'username': self.username,
+            'profile_pic': self.profile_pic,
             'title': self.title,
             'description': self.description,
             'price': self.price,
             'condition': self.condition,
             'image': self.image,
             'comments': [],
-            'date': self.date
+            'date': self.date,
+            'created': self.created
         }
         for comment in self.comments:
             d['comments'].append(comment.to_dict())

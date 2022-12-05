@@ -1,17 +1,27 @@
 {% extends '_base.html' %}
 {% block content %}
-<form method="post" action="/saveabout">
-    <textarea name="bio" rows="10" cols="50">{{text}}</textarea>
-    <td>First Name</td>
-    <td><input type="first_name" name="first_name"></td>
-    <td>Last Name</td>
-    <td><input type="last_name" name="last_name"></td>
-    <td>Graduation Year</td>
-    <td><input type="grad_year" name="grad_year"></td>
-    <td>School (e.g School of Computing)</td>
-    <td><input type="school" name="school"></td>
-    <td>Profile Photo URL</td>
-    <td><input type="photo_url" name="photo_url"></td>
-    <div><input type="submit"></div>
-</form>
+<section class="editprofile">
+    <form method="post" action="/saveprofile">
+        <td>First Name</td>
+        <td><input type="first_name" name="first_name" value="{{userObj.first_name}}"></td>
+        <br />
+        <td>Last Name</td>
+        <td><input type="last_name" name="last_name" value="{{userObj.last_name}}"></td>
+        <br />
+        <td>Graduation Year</td>
+        <td><input type="grad_year" name="grad_year" value="{{userObj.grad_year}}"></td>
+        <br />
+        <td>School (e.g School of Computing)</td>
+        <td><input type="school" name="school" value="{{userObj.school}}"></td>
+        <br />
+        <td>Profile Photo URL</td>
+        <td><input type="photo_url" name="photo_url" value="{{userObj.photo_url}}"></td>
+        <br />
+        <td>Bio</td>
+        <br />
+        <td><textarea name="bio" rows="10" cols="50">{{userObj.bio}}</textarea></td>
+        <br />
+        <div><input type="submit"></div>
+    </form>
+</section>
 {% endblock %}

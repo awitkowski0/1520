@@ -9,19 +9,26 @@ body {
 .nav {
     background-color: rgba(0, 53, 148);
     overflow: hidden;
-    display: grid;
-    grid-template-columns: repeat(15, 1fr);
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin: 10px;
 }
 
 /* Navigation buttons */
 .nav a {
     background-color: rgba(0, 53, 148);
     color: #f6f2ea;
-    float: left;
+    /* float: left; */
     padding: 16px 32px;
     text-decoration: none;
     font-size: 20px;
 }
+
+.nav div {
+    padding: 10px;
+}
+
 /* CSS for the logo in the navigation */
 .nav img {
     width: 120px;
@@ -31,7 +38,8 @@ body {
 }
 
 /* Change the href based on if the user is hovering */
-.nav a:hover, a.split:hover {
+.nav a:hover,
+a.split:hover {
     background-color: rgba(133, 149, 179, 0.866);
     color: #f6f2ea;
 }
@@ -55,13 +63,15 @@ body {
 
     display: grid;
     grid-template-columns: repeat(12, 1fr);
+    padding-top: 10px;
 }
 
 .newsfeed button {
     padding: 10px;
     width: 75%;
     font-size: 1.5v;
-    background-color: rgba(0, 53, 148);;
+    background-color: rgba(0, 53, 148);
+    ;
     border-radius: 10px;
     color: #f6f2ea
 }
@@ -74,24 +84,31 @@ body {
 .content-1 {
     grid-column: span 1;
 }
+
 .content-2 {
     grid-column: span 2;
 }
+
 .content-3 {
     grid-column: span 3;
 }
+
 .content-4 {
     grid-column: span 4;
 }
+
 .content-5 {
     grid-column: span 5;
 }
+
 .content-6 {
     grid-column: span 5;
 }
+
 .content-7 {
     grid-column: span 7;
 }
+
 .content-8 {
     grid-column: span 8;
 }
@@ -109,9 +126,10 @@ body {
 
 .post-image img {
     display: block;
-    width: 80%;
-    margin-left: auto; 
+    /* width: 80%; */
+    margin-left: auto;
     margin-right: auto;
+    max-height: 300px;
 }
 
 .comment {
@@ -120,10 +138,24 @@ body {
     padding: 8px 8px;
     text-decoration: none;
     font-size: 20px;
+    margin-top: 25px;
+
 }
 
 .description {
-    margin-left:20px;
+    margin-left: 20px;
+}
+
+.editprofile {
+    background-color: #f6f2ea;
+}
+
+.edit-profile-button {
+    text-align: right;
+}
+
+.edit-profile-button img {
+    width: 5%;
 }
 
 /* Sign up page */
@@ -150,7 +182,7 @@ body {
     text-align: center;
 }
 
-.login_form{
+.login_form {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -162,7 +194,7 @@ body {
 }
 
 /* Searchbar */
-.searchbar input{
+.searchbar input {
     width: 90%;
     height: 90%;
     float: left;
@@ -177,10 +209,10 @@ body {
     background-color: #f6f2ea;
 }
 
-/* Edit Icon */ 
+/* Edit Icon */
 .edit img {
     width: 25%;
-    float: right; 
+    float: right;
 }
 
 .content-1.edit {
@@ -192,12 +224,16 @@ body {
     background-color: #f6f2ea;
 }
 
-/* Delete Icon */ 
+/* Delete Icon */
 .content-1.delete {
     padding: 10px;
 }
 
 .delete img {
     width: 25%;
-    float: right; 
+    float: right;
+}
+
+.bio {
+    text-align: left;
 }

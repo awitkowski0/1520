@@ -8,32 +8,33 @@
     <div class="content-8">
         <!-- For loop logic of jinja? template -->
 
-        {%for post in news_feed%}
+        {%for post in posts %}
         <div class="container">
             <div class="row">
                 <div class="content-2">
-                    <a href="/{{post.username}}}}">
+                    <a href="/user/{{post.username}}">
                         <div class="profile-pic">
-                            <img src="/static/assets/{{post.profile}}" alt={{post.display}}>
+                            <img src="{{post.profile_pic}}" alt="poster profile picture">
                         </div>
                     </a>
                 </div>
                 <div class="content-4">
-                    <h1 class="title">{{post.display}}</h1>
-                    <h2 class="date">{{post.date}}</h2>
+                    <h1 class="title">{{post.title}}</h1>
+                    <h4 class="condition-price">{{post.condition}} - ${{post.price}}</h4>
+                    <p>{{post.date}}</p>
                 </div>
                 <div class="content-1 edit">
-                    {% if user.username == post.username %}
+                    {% if user == post.username %}
                     <a href="/editpost?id={{post.post_id}}">
-                        <img src="../static/assets/pencil-icon.png" alt="edit">
+                        <img src="../s/assets/pencil-icon.png" alt="edit">
                     </a>
                     {% endif %}
                 </div>
                 <!-- delete post -->
                 <div class="content-1 delete">
-                    {% if user.username == post.username %}
+                    {% if user == post.username %}
                     <a href="/delete?id={{post.post_id}}">
-                        <img src="../static/assets/delete-icon.png" alt="delete">
+                        <img src="../s/assets/delete-icon.png" alt="delete">
                     </a>
                     {% endif %}
                 </div>
@@ -50,20 +51,25 @@
                     </div>
                 </div>
             </div>
+
             <div class="row">
+                {% if userObj != None %}
                 <div class="content-1">
                     <div class="profile-pic">
-                        <img src="/static/assets/{{post.profile_image}}" class="profile-pic">
+                        <img src="{{userObj.photo_url}}" alt="my profile picture">
                     </div>
                 </div>
                 <div class="content-7">
                     <div class="comment">
                         <form>
                             <input type="text" id="comment" placeholder="Add a comment...">
+                            <input type="submit" value="Add Comment">
                         </form>
                     </div>
                 </div>
+                {% endif %}
             </div>
+
         </div><br /><br />
         {% endfor %}
     </div>
