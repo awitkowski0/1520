@@ -13,7 +13,7 @@ body {
     flex-direction: row;
     justify-content: space-between;
     margin: 10px;
-    
+
 }
 
 /* Navigation buttons */
@@ -50,12 +50,14 @@ a.split:hover {
     color: #f6f2ea;
 }
 
-.right { display: flex;
+.right {
+    display: flex;
     justify-content: center;
     align-items: center;
 }
 
-.left { display: flex;
+.left {
+    display: flex;
     justify-content: center;
     align-items: center;
 }
@@ -127,6 +129,7 @@ a.split:hover {
     background-color: #a9a8a7;
     border-color: #7a7978;
     border-radius: 10px;
+    padding: 5px;
 }
 
 .row {
@@ -140,6 +143,7 @@ a.split:hover {
     margin-left: auto;
     margin-right: auto;
     max-height: 300px;
+    max-width: 250px;
 }
 
 .post-image {
@@ -156,12 +160,18 @@ a.split:hover {
 
 }
 
+.photo_and_content {
+    margin-top: 20px;
+}
+
+/* 
 .description {
     margin-left: 20px;
-}
+} */
 
 .editprofile {
     background-color: #f6f2ea;
+    padding-left: 400px;
 }
 
 .edit-profile-button {
@@ -175,7 +185,11 @@ a.split:hover {
 /* Sign up page */
 .signup {
     background-color: #f6f2ea;
-    /* text-align: center; */
+    text-align: right;
+}
+
+.signup-submit {
+    text-align: center;
 }
 
 .signup_form {
@@ -186,9 +200,19 @@ a.split:hover {
 
 .container_login {
     background-color: #f6f2ea;
-    /* text-align: center; */
+    text-align: center;
 }
 
+.center-table {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.Error {
+    text-align: center;
+    padding: 10px;
+    color: red;
+}
 
 /* Login page */
 .login {
@@ -207,6 +231,15 @@ a.split:hover {
     text-align: center;
 }
 
+.profile-name {
+    font-size: 35px;
+}
+
+.school-grad-year {
+    font-size: 20px;
+    font-weight: bold;
+}
+
 /* Searchbar */
 .searchbar input {
     width: 90%;
@@ -221,12 +254,22 @@ a.split:hover {
 /* Create Post */
 .createpost {
     background-color: #f6f2ea;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 400px;
 }
+
+
 
 /* Edit Icon */
 .edit img {
-    width: 25%;
+    width: 20%;
     float: right;
+    margin-right: 20px;
+}
+
+.edit {
+    margin: 10px;
 }
 
 .content-1.edit {
@@ -244,8 +287,12 @@ a.split:hover {
 }
 
 .delete img {
-    width: 25%;
+    width: 20%;
     float: right;
+}
+
+.delete {
+    margin: 10px;
 }
 
 .bio {

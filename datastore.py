@@ -56,15 +56,15 @@ def _post_from_entity(post_entity):
     image = post_entity['image']
     date = post_entity['date']
     created = post_entity['created']
-    
+
     post = objects.Post(post_id, username, profile_pic, title, description,
                         price, condition, image, [], date, created)
-    
+
     # post_entity['comments'] should be an array of IDs
     comments = post_entity['comments']
     for comment_id in comments:
         post.add_comment(load_comment(post_id, comment_id))
-    
+
     logging.info('built object from post entity: %s' % (post_id))
     return post
 
@@ -92,9 +92,9 @@ def load_post(post_id):
     logging.info('loaded post: %s' % (post_id))
     post = _post_from_entity(post_entity)
     query = client.query(kind=_COMMENT_ENTITY)
-    query.add_filter('post_id', '=', post_id)
+    # query.add_filter('post_id', '=', post_id)
     #query.order = ['date']
-    
+
     for comment in query.fetch():
         post.add_comment(_comment_from_entity(comment))
     logging.info('loaded posts: %s' % (len(post.comments)))
@@ -121,7 +121,7 @@ def load_comment(post_id, comment_id):
     client = _get_client()
     parent_key = _load_key(client, _POST_ENTITY, post_id)
     comment_entity = _load_entity(
-        client, _COMMENT_ENTITY, comment_id, parent_key)
+        client, _COMMENT_ENTITY, comment_id)
     return _comment_from_entity(comment_entity)
 
 
@@ -214,7 +214,8 @@ def create_comment(comment: objects.Comment):
     """Save comment to datastore"""
     client = _get_client()
 
-    entity = datastore.Entity(_load_key(client, _COMMENT_ENTITY, comment.comment_id))
+    entity = datastore.Entity(
+        _load_key(client, _COMMENT_ENTITY, comment.comment_id))
 
     entity['comment_id'] = comment.comment_id
     entity['post_id'] = comment.post_id

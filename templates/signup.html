@@ -5,7 +5,7 @@ Sign Up
 {% block content %}
 <div class="signup">
     <form method="post" action="/register">
-        <table>
+        <table class="center-table">
             <tr>
                 <td>Pitt Email Address</td>
                 <td><input type="email" name="email"></td>
@@ -42,10 +42,15 @@ Sign Up
                 <td>Repeat Password</td>
                 <td><input type="password" name="password2"></td>
             </tr>
-            <tr>
-                <td colspan="2"><input type="submit"></td>
-            </tr>
         </table>
+        <div class="signup-submit">
+            <input type="submit">
+        </div>
     </form>
+
+    <header>{% if errors %}{% for error in errors %}
+        <div class="Error">{{error}}</div>
+        {% endfor %}{% endif %}
+    </header>
 </div>
 {% endblock %}

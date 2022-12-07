@@ -36,54 +36,84 @@
                         </div>
                         <div class="content-4">
                             <h1 class="title">{{post.title}}</h1>
-                            <h4 class="condition-price">{{post.condition}} - ${{post.price}}</h4>
+                            <!-- <h4 class="condition-price">{{post.condition}} - ${{post.price}}</h4> -->
                             <p>{{post.date}}</p>
                         </div>
-                        <div class="content-1 edit">
+                        <div class="content-2">
                             {% if user == post.username %}
-                            <a href="/editpost?id={{post.post_id}}">
-                                <img src="../s/assets/pencil-icon.png" alt="edit">
-                            </a>
+                            <div class="delete">
+                                <a href="/delete?id={{post.post_id}}">
+                                    <img src="../s/assets/delete-icon.png" alt="delete">
+                                </a>
+                            </div>
+                            <div class="edit">
+                                <a href="/editpost?id={{post.post_id}}">
+                                    <img src="../s/assets/pencil-icon.png" alt="edit">
+                                </a>
+                            </div>
                             {% endif %}
                         </div>
                         <!-- delete post -->
-                        <div class="content-1 delete">
+                        <!-- <div class="content-1 delete">
                             {% if user == post.username %}
                             <a href="/delete?id={{post.post_id}}">
                                 <img src="../s/assets/delete-icon.png" alt="delete">
                             </a>
                             {% endif %}
-                        </div>
+                        </div> -->
                     </div>
-                    <div class="row">
+                    <hr>
+                    <!-- <div class="row">
                         <div class="content-8">
                             <p class="description">{{post.description}}</p>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="content-8">
+                    </div> -->
+                    <div class="row photo_and_content">
+                        <div class="content-4">
                             <div class="post-image">
                                 <img src="{{post.image}}" class="post-image">
                             </div>
                         </div>
-                    </div>
-                    <!--
-                    <div class="row">
-                        <div class="content-1">
-                            <div class="profile-pic">
-                                <img src="{{userObj.photo_url}}" alt="my profile picture">
+                        <div class="content-4">
+                            <div class="text">
+                                <h4 class="condition">Condition: {{post.condition}}</h4>
+                                <h4 class="price">Price: ${{post.price}}</h4>
+                                <p class="description">
+                                    <strong>Description:</strong> {{post.description}}
+                                </p>
                             </div>
+                        </div>
+                    </div>
+                    <!-- Comments just like don't work? -->
+                    <!-- {%for comment in post.comments %}
+                    <div class="row">
+                        <a>{{comment.username}}</a>
+                        <a>{{comment.description}}</a>
+                        <a>{{comment.date}}</a>
+                    </div>
+                    {% endfor %}
+        
+                    <div class="row">
+                        {% if userObj != None %}
+                        <div class="content-1">
+                            <a href="/user/{{userObj.username}}">
+                                <div class="profile-pic">
+                                    <img src="{{userObj.photo_url}}" alt="my profile picture">
+                                </div>
+                            </a>
                         </div>
                         <div class="content-7">
                             <div class="comment">
-                                <form>
-                                    <input type="text" id="comment" placeholder="Add a comment...">
+                                <form method="post" action="/post_comment?id={{post.post_id}}">
+                                    <input type="text" name="description" id="description" placeholder="Add a comment...">
                                     <input type="submit" value="Add Comment">
                                 </form>
                             </div>
                         </div>
-                    </div>
-                    -->
+                        {% endif %}
+                    </div> -->
+
+
                 </div><br /><br />
                 {% endif %}
                 {%endfor%}
@@ -99,9 +129,9 @@
                 </a>
             </div>
             {% endif %}
-            <h1>{{userObj.first_name | capitalize}} {{userObj.last_name | capitalize}}</h1>
-            <p>{{userObj.school}} | Graduating {{userObj.grad_year}}</p>
-            <p>{{userObj.email}}</p>
+            <h1 class="profile-name">{{userObj.first_name | capitalize}} {{userObj.last_name | capitalize}}</h1>
+            <p class="school-grad-year">{{userObj.school}} | Graduating {{userObj.grad_year}}</p>
+            <p><strong>{{userObj.email}}</strong></p>
 
             <div class="bio">
                 {% if userObj.bio != "" %}

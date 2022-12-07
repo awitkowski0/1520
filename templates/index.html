@@ -20,39 +20,56 @@
                 </div>
                 <div class="content-4">
                     <h1 class="title">{{post.title}}</h1>
-                    <h4 class="condition-price">{{post.condition}} - ${{post.price}}</h4>
+                    <!-- <h4 class="condition-price">{{post.condition}} - ${{post.price}}</h4> -->
                     <p>{{post.date}}</p>
                 </div>
-                <div class="content-1 edit">
+                <div class="content-2">
                     {% if user == post.username %}
-                    <a href="/editpost?id={{post.post_id}}">
-                        <img src="../s/assets/pencil-icon.png" alt="edit">
-                    </a>
+                    <div class="delete">
+                        <a href="/delete?id={{post.post_id}}">
+                            <img src="../s/assets/delete-icon.png" alt="delete">
+                        </a>
+                    </div>
+                    <div class="edit">
+                        <a href="/editpost?id={{post.post_id}}">
+                            <img src="../s/assets/pencil-icon.png" alt="edit">
+                        </a>
+                    </div>
                     {% endif %}
                 </div>
                 <!-- delete post -->
-                <div class="content-1 delete">
+                <!-- <div class="content-1 delete">
                     {% if user == post.username %}
                     <a href="/delete?id={{post.post_id}}">
                         <img src="../s/assets/delete-icon.png" alt="delete">
                     </a>
                     {% endif %}
-                </div>
+                </div> -->
             </div>
-            <div class="row">
+            <hr>
+            <!-- <div class="row">
                 <div class="content-8">
                     <p class="description">{{post.description}}</p>
                 </div>
-            </div>
-            <div class="row">
-                <div class="content-8">
+            </div> -->
+            <div class="row photo_and_content">
+                <div class="content-4">
                     <div class="post-image">
                         <img src="{{post.image}}" class="post-image">
                     </div>
                 </div>
+                <div class="content-4">
+                    <div class="text">
+                        <h4 class="condition">Condition: {{post.condition}}</h4>
+                        <h4 class="price">Price: ${{post.price}}</h4>
+                        <p class="description">
+                            <strong>Description:</strong> {{post.description}}
+                        </p>
+                    </div>
+                </div>
             </div>
-            <!-- Comments just like don't work?
-            {%for comment in post.comments %}
+            <!-- Comments just like don't work? -->
+            <!-- {%for comment in post.comments %}
             <div class="row">
                 <a>{{comment.username}}</a>
                 <a>{{comment.description}}</a>
@@ -78,8 +95,8 @@
                     </div>
                 </div>
                 {% endif %}
-            </div>
-        !-->
+            </div> -->
+
 
         </div><br /><br />
         {% endfor %}
