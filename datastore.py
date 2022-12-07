@@ -56,8 +56,15 @@ def _post_from_entity(post_entity):
     image = post_entity['image']
     date = post_entity['date']
     created = post_entity['created']
+    
     post = objects.Post(post_id, username, profile_pic, title, description,
                         price, condition, image, [], date, created)
+    
+    # post_entity['comments'] should be an array of IDs
+    comments = post_entity['comments']
+    for comment_id in comments:
+        post.add_comment(load_comment(post_id, comment_id))
+    
     logging.info('built object from post entity: %s' % (post_id))
     return post
 
@@ -65,7 +72,7 @@ def _post_from_entity(post_entity):
 def _comment_from_entity(comment_entity):
     """Translate the comment entity to a regular old Python object."""
 
-    comment_id = comment_entity.key.id
+    comment_id = comment_entity['comment_id']
     post_id = comment_entity['post_id']
     username = comment_entity['username']
     description = comment_entity['description']
@@ -84,11 +91,13 @@ def load_post(post_id):
     post_entity = _load_entity(client, _POST_ENTITY, post_id)
     logging.info('loaded post: %s' % (post_id))
     post = _post_from_entity(post_entity)
-    # query = client.query(kind=_COMMENT_ENTITY, ancestor=post_entity.key)
-    # query.order = ['title']
-    # for comment in query.fetch():
-    #     post.add_comment(_comment_from_entity(comment))
-    # logging.info('loaded posts: %s' % (len(post.comments)))
+    query = client.query(kind=_COMMENT_ENTITY)
+    query.add_filter('post_id', '=', post_id)
+    #query.order = ['date']
+    
+    for comment in query.fetch():
+        post.add_comment(_comment_from_entity(comment))
+    logging.info('loaded posts: %s' % (len(post.comments)))
     return post
 
 
@@ -201,6 +210,21 @@ def save_about_user(user, first_name, last_name, grad_year, school, photo_url, b
     client.put(user)
 
 
+def create_comment(comment: objects.Comment):
+    """Save comment to datastore"""
+    client = _get_client()
+
+    entity = datastore.Entity(_load_key(client, _COMMENT_ENTITY, comment.comment_id))
+
+    entity['comment_id'] = comment.comment_id
+    entity['post_id'] = comment.post_id
+    entity['username'] = comment.username
+    entity['description'] = comment.description
+    entity['date'] = comment.date
+
+    client.put(entity)
+
+
 def save_post(post):
     """Save post info to the datastore"""
 
@@ -221,7 +245,7 @@ def save_post(post):
     client.put(entity)
 
 
-def update_post(post):
+def update_post(post: objects.Post):
     client = _get_client()
     entity = _load_entity(client, _POST_ENTITY, post.post_id)
 
@@ -231,6 +255,8 @@ def update_post(post):
     entity['price'] = post.price
     entity['condition'] = post.condition
     entity['image'] = post.image
+    for comment in post.comments:
+        entity['comments'].append(comment.comment_id)
     entity['date'] = post.date
 
     client.put(entity)

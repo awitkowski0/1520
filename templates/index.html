@@ -51,6 +51,14 @@
                     </div>
                 </div>
             </div>
+            <!-- Comments just like don't work?
+            {%for comment in post.comments %}
+            <div class="row">
+                <a>{{comment.username}}</a>
+                <a>{{comment.description}}</a>
+                <a>{{comment.date}}</a>
+            </div>
+            {% endfor %}
 
             <div class="row">
                 {% if userObj != None %}
@@ -63,14 +71,15 @@
                 </div>
                 <div class="content-7">
                     <div class="comment">
-                        <form>
-                            <input type="text" id="comment" placeholder="Add a comment...">
+                        <form method="post" action="/post_comment?id={{post.post_id}}">
+                            <input type="text" name="description" id="description" placeholder="Add a comment...">
                             <input type="submit" value="Add Comment">
                         </form>
                     </div>
                 </div>
                 {% endif %}
             </div>
+        !-->
 
         </div><br /><br />
         {% endfor %}

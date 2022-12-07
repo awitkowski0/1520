@@ -152,6 +152,31 @@ def createpost():
 # LEFT OFF HERE!!!
 
 
+@app.route('/post_comment', methods=['POST', 'GET'])
+def post_comment():
+    user = get_user()
+
+    username = user
+    description = flask.request.form.get('description')
+    post_id = flask.request.values['id']
+    time = datetime.datetime.now().strftime('%a, %B %d, %Y at %H:%M:%S')
+
+    comment_id = post_id + username + time
+
+    post = datastore.load_post(post_id)
+
+    comment = objects.Comment(
+        comment_id,
+        post_id,
+        username,
+        description
+    )
+    datastore.create_comment(comment)
+
+    post.add_comment(comment)
+    datastore.update_post(post)
+
+    return flask.redirect('/')
 @app.route('/update', methods=['POST', 'GET'])
 def update():
     user = get_user()
@@ -192,6 +217,7 @@ def update():
         post.condition = condition
         post.description = description
         post.date = time
+        post.comments = post.comments
 
         datastore.update_post(post)
 

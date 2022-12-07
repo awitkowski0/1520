@@ -75,7 +75,7 @@ class User(object):
 
 
 class Comment(object):
-    def __init__(self, comment_id, post_id, username, description, date):
+    def __init__(self, comment_id, post_id, username, description, date=None):
         self.comment_id = comment_id
         self.post_id = post_id
         self.username = username
@@ -117,7 +117,7 @@ class Post(object):
 
         self.created = str(datetime.datetime.now())
 
-    def add_comment(self, comment):
+    def add_comment(self, comment: Comment):
         self.comments.append(comment)
 
     def to_dict(self):
@@ -135,5 +135,5 @@ class Post(object):
             'created': self.created
         }
         for comment in self.comments:
-            d['comments'].append(comment.to_dict())
+            d['comments'].append(comment.comment_id)
         return d
