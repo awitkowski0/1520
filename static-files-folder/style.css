@@ -13,6 +13,7 @@ body {
     flex-direction: row;
     justify-content: space-between;
     margin: 10px;
+    
 }
 
 /* Navigation buttons */
@@ -31,10 +32,9 @@ body {
 
 /* CSS for the logo in the navigation */
 .nav img {
-    width: 120px;
+    width: 300px;
     background-color: rgba(0, 53, 148);
     float: left;
-    padding: 16px 32px;
 }
 
 /* Change the href based on if the user is hovering */
@@ -48,6 +48,16 @@ a.split:hover {
 .nav a.split {
     float: right;
     color: #f6f2ea;
+}
+
+.right { display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.left { display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 /* Funny little gold stripe*/

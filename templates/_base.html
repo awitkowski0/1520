@@ -15,18 +15,20 @@
 <body>
     <div class="nav">
         {% if not user %}
-        <div class="left"><a href="/" class="NavLink">Home</a></div>
+        <div class="left"><img src="/s/assets/ROCSMARKETPLACELOGO.png"></div>
         <div class="right">
+            <a href="/" class="NavLink">Home</a>
             <a href="/signup" class="NavLink">Sign Up</a>
             <a href="/signin" class="NavLink">Sign In</a>
         </div>
         {% else %}
         <div class="left">
+            <img src="/s/assets/ROCSMARKETPLACELOGO.png">
+        </div>
+        <div class="right">
             <a href="/" class="NavLink">Home</a>
             <a href="/createpost" class="NavLink">Create Post</a>
             <a href="/user/{{user}}">My Info</a>
-        </div>
-        <div class="right">
             <a href="/signout" class="NavLink">Sign Out</a>
         </div>
         {% endif %}
