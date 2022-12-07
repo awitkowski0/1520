@@ -3,53 +3,49 @@
 Sign Up
 {% endblock %}
 {% block content %}
-<form method="post" action="/register">
-    <table>
-        <tr>
-            <td>Pitt Email Address</td>
-            <td><input type="email" name="email"></td>
-        </tr>
-        <tr>
-            <td>First Name</td>
-            <td><input type="first_name" name="first_name"></td>
-        </tr>
-        <tr>
-            <td>Last Name</td>
-            <td><input type="last_name" name="last_name"></td>
-        </tr>
-        <tr>
-            <td>Graduation Year</td>
-            <td><input type="grad_year" name="grad_year"></td>
-        </tr>
-        <tr>
-            <td>School (e.g School of Computing)</td>
-            <td><input type="school" name="school"></td>
-        </tr>
-        <tr>
-            <td>Profile Photo URL</td>
-            <td><input type="photo_url" name="photo_url"></td>
-        </tr>
-        <tr>
-            <td>Tell us about yourself!</td>
-            <td><input type="bio" name="bio"></td>
-        </tr>
-        <tr>
-            <td colspan="2" class="Instruction">We won't use your email address to spam you, but it might be useful if you need to retrieve your password.</td>
-        </tr>
-        <tr>
-            <td>Password</td>
-            <td><input type="password" name="password1"></td>
-        </tr>
-        <tr>
-            <td>Repeat Password</td>
-            <td><input type="password" name="password2"></td>
-        </tr>
-        <tr>
-            <td colspan="2" class="Instruction">Go ahead and repeat that, just in case there was a mistake.</td>
-        </tr>
-        <tr>
-            <td colspan="2"><input type="submit"></td>
-        </tr>
-    </table>
-</form>
+<div class="signup">
+    <form method="post" action="/register">
+        <table>
+            <tr>
+                <td>Pitt Email Address</td>
+                <td><input type="email" name="email"></td>
+            </tr>
+            <tr>
+                <td>First Name</td>
+                <td><input type="first_name" name="first_name"></td>
+            </tr>
+            <tr>
+                <td>Last Name</td>
+                <td><input type="last_name" name="last_name"></td>
+            </tr>
+            <tr>
+                <td>Graduation Year</td>
+                <td><input type="grad_year" name="grad_year"></td>
+            </tr>
+            <tr>
+                <td>School (e.g School of Computing)</td>
+                <td><input type="school" name="school"></td>
+            </tr>
+            <tr>
+                <td>Profile Photo URL</td>
+                <td><input type="photo_url" name="photo_url"></td>
+            </tr>
+            <tr>
+                <td>Tell us about yourself!</td>
+                <td><input type="bio" name="bio"></td>
+            </tr>
+            <tr>
+                <td>Password</td>
+                <td><input type="password" name="password1"></td>
+            </tr>
+            <tr>
+                <td>Repeat Password</td>
+                <td><input type="password" name="password2"></td>
+            </tr>
+            <tr>
+                <td colspan="2"><input type="submit"></td>
+            </tr>
+        </table>
+    </form>
+</div>
 {% endblock %}

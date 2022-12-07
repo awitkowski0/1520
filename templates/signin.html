@@ -3,19 +3,21 @@
 Log In
 {% endblock %}
 {% block content %}
-<form method="post" action="/dosignin">
-    <table>
-        <tr>
-            <td>Email</td>
-            <td><input type="input" name="email"></td>
-        </tr>
-        <tr>
-            <td>Password</td>
-            <td><input type="password" name="password"></td>
-        </tr>
-        <tr>
-            <td colspan="2"><input type="submit"></td>
-        </tr>
-    </table>
-</form>
+<div class="login">
+    <form method="post" action="/dosignin">
+        <table>
+            <tr>
+                <td>Email</td>
+                <td><input type="input" name="email"></td>
+            </tr>
+            <tr>
+                <td>Password</td>
+                <td><input type="password" name="password"></td>
+            </tr>
+            <tr>
+                <td colspan="2"><input type="submit"></td>
+            </tr>
+        </table>
+    </form>
+</div>
 {% endblock %}

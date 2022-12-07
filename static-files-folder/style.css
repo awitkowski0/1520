@@ -132,6 +132,10 @@ a.split:hover {
     max-height: 300px;
 }
 
+.post-image {
+    margin-bottom: 20px;
+}
+
 .comment {
     color: #232222;
     float: left;
@@ -161,7 +165,7 @@ a.split:hover {
 /* Sign up page */
 .signup {
     background-color: #f6f2ea;
-    text-align: center;
+    /* text-align: center; */
 }
 
 .signup_form {
@@ -172,14 +176,14 @@ a.split:hover {
 
 .container_login {
     background-color: #f6f2ea;
-    text-align: center;
+    /* text-align: center; */
 }
 
 
 /* Login page */
 .login {
     background-color: #f6f2ea;
-    text-align: center;
+    /* text-align: center; */
 }
 
 .login_form {

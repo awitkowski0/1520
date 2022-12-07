@@ -55,9 +55,11 @@
             <div class="row">
                 {% if userObj != None %}
                 <div class="content-1">
-                    <div class="profile-pic">
-                        <img src="{{userObj.photo_url}}" alt="my profile picture">
-                    </div>
+                    <a href="/user/{{userObj.username}}">
+                        <div class="profile-pic">
+                            <img src="{{userObj.photo_url}}" alt="my profile picture">
+                        </div>
+                    </a>
                 </div>
                 <div class="content-7">
                     <div class="comment">
