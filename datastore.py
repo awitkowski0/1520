@@ -172,8 +172,7 @@ def load_about_user(username):
     """Return a string that represents the "About Me" information a user has
     stored."""
 
-    user = _load_entity(_get_client(), _USER_ENTITY, username)
-    if user:
+    if user := _load_entity(_get_client(), _USER_ENTITY, username):
         return user['bio']
     else:
         return ''
