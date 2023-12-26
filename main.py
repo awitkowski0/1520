@@ -37,8 +37,7 @@ def dosignin():
     email = flask.request.form.get('email')
     password = flask.request.form.get('password')
     passwordhash = get_password_hash(password)
-    user = datastore.load_user(email, passwordhash)
-    if user:
+    if user := datastore.load_user(email, passwordhash):
         flask.session['user'] = user.username
         return flask.redirect('/')
     else:
@@ -96,8 +95,7 @@ def register_user():
 
 @app.route('/editprofile')
 def editprofile():
-    user = get_user()
-    if user:
+    if user := get_user():
         userObj = datastore.load_user_from_username(user+'@pitt.edu')
         return show_page('edit_profile.html', 'Edit Info for ' + user, userObj=userObj)
     return show_login_page()
@@ -105,8 +103,7 @@ def editprofile():
 
 @app.route('/saveprofile', methods=['POST'])
 def saveprofile():
-    user = get_user()
-    if user:
+    if user := get_user():
         post_list = datastore.load_posts()
         first_name = flask.request.form.get('first_name')
         last_name = flask.request.form.get('last_name')
